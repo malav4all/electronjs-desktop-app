@@ -5,6 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Electron App</title>
   <link href="output.css" rel="stylesheet">
+  <style>
+    .settings-wrapper {
+      height: 160px; /* Adjust as needed */
+    }
+
+    .settings {
+      height: 100%;
+    }
+
+    .content-area {
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 48px); /* Adjust according to the height of the top section */
+      overflow: hidden;
+    }
+
+    .tab-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .tab-pane {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    .buttons-section {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+
+    .tab-buttons {
+      margin-bottom: 10px;
+    }
+
+    .flex-grow {
+      flex-grow: 1;
+    }
+
+    .flex-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      align-content: center;
+    }
+
+    .flex-item {
+      margin: 8px;
+    }
+
+    .flex-checkbox {
+      display: flex;
+      align-items: center;
+    }
+  </style>
 </head>
 <body class="p-4 bg-gray-100 h-screen flex items-center justify-center">
   <div class="bg-white shadow-lg rounded-lg p-6 w-full h-full max-w-full flex flex-col overflow-hidden">
@@ -20,72 +78,72 @@
         </div>
       </div>
 
-      <div class="border p-2 ml-4 flex-grow" id="tcpip-settings">
-        <div class="flex items-center mb-4">
-          <label class="w-16">IP:</label>
-          <input type="text" id="ip" value="127.0.0.1" class="p-1 border rounded flex-grow">
+      <div class="border p-2 ml-4 flex-grow settings-wrapper">
+        <div class="settings" id="tcpip-settings">
+          <div class="flex items-center mb-4">
+            <label class="w-16">IP:</label>
+            <input type="text" id="ip" value="127.0.0.1" class="p-1 border rounded flex-grow">
+          </div>
+          <div class="flex items-center mb-4">
+            <label class="w-16">Port:</label>
+            <input type="text" id="port" value="8080" class="p-1 border rounded flex-grow">
+          </div>
+          <div class="flex items-center mb-4">
+            <input type="checkbox" class="mr-2">
+            <label>Use as Server</label>
+          </div>
         </div>
-        <div class="flex items-center mb-4">
-          <label class="w-16">Port:</label>
-          <input type="text" id="port" value="8080" class="p-1 border rounded flex-grow">
-        </div>
-        <div class="flex items-center mb-4">
-          <input type="checkbox" class="mr-2">
-          <label>Use as Server</label>
-        </div>
-      </div>
 
-      <div class="border p-2 ml-4 flex-grow" id="serial-settings" style="display: none;">
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="block">Port:</label>
-            <select class="p-1 border rounded w-full">
-              <option value="COM1">COM1</option>
-              <option value="COM2">COM2</option>
-              <option value="COM3">COM3</option>
-            </select>
+        <div class="settings" id="serial-settings" style="display: none;">
+          <div class="grid grid-cols-3 gap-4 mb-4">
+            <div>
+              <label class="block">Port:</label>
+              <select class="p-1 border rounded w-full">
+                <option value="COM1">COM1</option>
+                <option value="COM2">COM2</option>
+                <option value="COM3">COM3</option>
+              </select>
+            </div>
+            <div>
+              <label class="block">Baud:</label>
+              <select class="p-1 border rounded w-full">
+                <option value="9600">9600</option>
+                <option value="14400">14400</option>
+                <option value="19200">19200</option>
+              </select>
+            </div>
+            <div>
+              <label class="block">Data Bits:</label>
+              <select class="p-1 border rounded w-full">
+                <option value="8">8</option>
+                <option value="7">7</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label class="block">Baud:</label>
-            <select class="p-1 border rounded w-full">
-              <option value="9600">9600</option>
-              <option value="14400">14400</option>
-              <option value="19200">19200</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="block">Data Bits:</label>
-            <select class="p-1 border rounded w-full">
-              <option value="8">8</option>
-              <option value="7">7</option>
-            </select>
-          </div>
-          <div>
-            <label class="block">Parity:</label>
-            <select class="p-1 border rounded w-full">
-              <option value="None">None</option>
-              <option value="Even">Even</option>
-              <option value="Odd">Odd</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="block">Stop Bits:</label>
-            <select class="p-1 border rounded w-full">
-              <option value="1">1</option>
-              <option value="2">2</option>
-            </select>
-          </div>
-          <div>
-            <label class="block">Flow Control:</label>
-            <select class="p-1 border rounded w-full">
-              <option value="None">None</option>
-              <option value="XON/XOFF">XON/XOFF</option>
-              <option value="RTS/CTS">RTS/CTS</option>
-            </select>
+          <div class="grid grid-cols-3 gap-4 mb-4">
+            <div>
+              <label class="block">Parity:</label>
+              <select class="p-1 border rounded w-full">
+                <option value="None">None</option>
+                <option value="Even">Even</option>
+                <option value="Odd">Odd</option>
+              </select>
+            </div>
+            <div>
+              <label class="block">Stop Bits:</label>
+              <select class="p-1 border rounded w-full">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </div>
+            <div>
+              <label class="block">Flow Control:</label>
+              <select class="p-1 border rounded w-full">
+                <option value="None">None</option>
+                <option value="XON/XOFF">XON/XOFF</option>
+                <option value="RTS/CTS">RTS/CTS</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -96,145 +154,149 @@
       </div>
     </div>
 
-    <div class="flex flex-col h-full overflow-hidden">
-      <div class="flex mb-4">
+    <div class="flex flex-col h-full content-area">
+      <div class="flex mb-4 tab-buttons">
         <button id="btn-lis1a" class="mr-4 px-4 py-2 bg-blue-500 text-white rounded">LIS1A</button>
         <button id="btn-manual" class="px-4 py-2 bg-gray-200 text-gray-800 rounded">Manual</button>
       </div>
-      <div class="flex-grow overflow-y-auto">
-        <div id="tab-content">
-          <!-- LIS1A content -->
-          <div id="lis1a-content" class="p-4">
-            <div class="mb-4">
-              <button id="sendButton" class="bg-gray-300 text-black px-4 py-2 rounded" disabled>Send</button>
-            </div>
-            <div class="flex items-center mb-4">
-              <input type="radio" name="simulate" class="mr-2">
-              <label>Simulate Instrument</label>
-              <input type="radio" name="simulate" class="ml-4 mr-2">
-              <label>Simulate Host</label>
-            </div>
-            <div class="flex items-center mb-4">
-              <input type="radio" name="frame" class="mr-2">
-              <label>Use Fixed Frame Size</label>
-              <input type="number" value="240" class="ml-2 p-1 border rounded w-16">
-            </div>
-            <div class="flex items-center mb-4">
-              <input type="radio" name="frame" class="mr-2">
-              <label>Use a Frame for each Record</label>
-            </div>
-            <div class="flex flex-col mb-4">
-              <textarea id="firstSpaceContent" class="border p-2 mb-2 h-32" placeholder="First space content"></textarea>
-              <textarea id="secondSpaceContent" class="border p-2 h-32" placeholder="Second space content"></textarea>
-            </div>
+      <div id="tab-content" class="tab-content">
+        <!-- LIS1A content -->
+        <div id="lis1a-content" class="tab-pane p-4" style="display: none;">
+          <div class="buttons-section">
+            <button id="sendButton" class="bg-gray-300 text-black px-4 py-2 rounded" disabled>Send</button>
           </div>
+          <div class="flex items-center mb-4">
+            <input type="radio" name="simulate" class="mr-2">
+            <label>Simulate Instrument</label>
+            <input type="radio" name="simulate" class="ml-4 mr-2">
+            <label>Simulate Host</label>
+          </div>
+          <div class="flex items-center mb-4">
+            <input type="radio" name="frame" class="mr-2">
+            <label>Use Fixed Frame Size</label>
+            <input type="number" value="240" class="ml-2 p-1 border rounded w-16">
+          </div>
+          <div class="flex items-center mb-4">
+            <input type="radio" name="frame" class="mr-2">
+            <label>Use a Frame for each Record</label>
+          </div>
+          <div class="flex flex-col mb-4 flex-grow">
+            <textarea id="firstSpaceContent" class="border p-2 mb-2 flex-grow" placeholder="First space content"></textarea>
+            <textarea id="secondSpaceContent" class="border p-2 flex-grow" placeholder="Second space content"></textarea>
+          </div>
+        </div>
 
-          <!-- Manual content -->
-          <div id="manual-content" class="p-4" style="display: none;">
-            <div class="flex mb-4">
-              <div class="mr-4">
-                <label>Character List:</label>
-                <select class="p-2 border rounded ml-2">
-                  <option value="<NUL>">&lt;NUL&gt; 0</option>
-                  <option value="<SOH>">&lt;SOH&gt; 1</option>
-                  <option value="<STX>">&lt;STX&gt; 2</option>
-                </select>
-              </div>
-              <div class="mr-4">
-                <label>Start String:</label>
-                <input type="text" class="p-2 border rounded ml-2">
-              </div>
-              <div>
-                <label>End String:</label>
-                <input type="text" class="p-2 border rounded ml-2">
-              </div>
-            </div>
-            <div class="flex items-center mb-4">
-              <input type="checkbox" class="mr-2">
-              <label>Old ASTM</label>
-              <input type="checkbox" class="ml-4 mr-2">
-              <label>Checksum</label>
-            </div>
-            <div class="flex mb-4">
-              <label>Include:</label>
+        <!-- Manual content -->
+        <div id="manual-content" class="tab-pane p-4" style="display: none;">
+          <div class="flex-container">
+            <div class="flex-item">
+              <label>Character List:</label>
               <select class="p-2 border rounded ml-2">
-                <option value="Both Start and End">Both Start and End</option>
+                <option value="<NUL>">&lt;NUL&gt; 0</option>
+                <option value="<SOH>">&lt;SOH&gt; 1</option>
+                <option value="<STX>">&lt;STX&gt; 2</option>
               </select>
             </div>
-            <div class="flex mb-4">
-              <label>Checksum:</label>
-              <select class="p-2 border rounded ml-2">
-                <option value="AddMod256">AddMod256</option>
-              </select>
+            <div class="flex-item">
+              <label>Start String:</label>
+              <input type="text" class="p-2 border rounded ml-2">
             </div>
-            <div class="flex mb-4">
-              <button class="bg-gray-300 text-black px-4 py-2 rounded mr-2">Clear</button>
+            <div class="flex-item">
+              <label>End String:</label>
+              <input type="text" class="p-2 border rounded ml-2">
             </div>
-            <div class="flex mb-4">
-              <div class="mr-4">
-                <button class="bg-gray-300 text-black px-4 py-2 rounded">Sent</button>
+            <div class="flex-container flex-checkbox mb-4">
+              <div class="flex-item">
+                <input type="checkbox" class="mr-2">
+                <label>Old ASTM</label>
               </div>
-              <div>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded">Received</button>
+              <div class="flex-item">
+                <input type="checkbox" class="mr-2">
+                <label>Checksum</label>
               </div>
-            </div>
-            <div class="mb-4">
-              <textarea id="sentContent" class="border p-2 mb-2 h-32 w-full" placeholder="Sent content"></textarea>
-            </div>
-            <div class="mb-4">
-              <textarea id="receivedContent" class="border p-2 h-32 w-full" placeholder="Received content"></textarea>
+              <div class="flex-container">
+                <div class="flex-item">
+                  <label>Include:</label>
+                  <select class="p-2 border rounded ml-2">
+                    <option value="Both Start and End">Both Start and End</option>
+                  </select>
+                </div>
+                <div class="flex-item">
+                  <label>Checksum:</label>
+                  <select class="p-2 border rounded ml-2">
+                    <option value="AddMod256">AddMod256</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
-
-          <!-- Content that should scroll -->
-          <div class="overflow-y-auto" style="max-height: 50vh;">
-            <div class="border-t mt-4 pt-4">
-              <div class="flex items-center mb-4">
-                <label class="w-24">Disconnected</label>
-                <input type="text" class="p-2 border rounded ml-2 w-16">
-                <button class="bg-gray-300 text-black px-4 py-2 rounded ml-2">Send Line</button>
-                <input type="text" class="p-2 border rounded ml-2 w-16">
-                <button class="bg-gray-300 text-black px-4 py-2 rounded ml-2">Send Char(s)</button>
-              </div>
-              <div class="flex items-center mb-4">
-                <button class="bg-gray-300 text-black px-4 py-2 rounded mr-2">Send Memo</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded">Load Input</button>
-              </div>
-              <div class="flex flex-wrap">
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">NULL</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SOH</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">STX</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ETX</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">EOT</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ENQ</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ACK</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">BEL</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">BS</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">HT</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">LF</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">VT</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">FF</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">CR</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SO</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SI</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DLE</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DC1</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DC2</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DC3</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DC4</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">NAK</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SYN</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ETB</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">CAN</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">EM</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SUB</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ESC</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">FS</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">GS</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">RS</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">US</button>
-              </div>
+          
+          
+          <div class="flex-container  gap-2 mb-4">
+            <button class="bg-gray-300 text-black px-4 py-2 rounded">Received</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded">Sent</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded mr-2">Clear</button>
+          </div>
+          
+          <div class="flex-container mb-4">
+            <textarea id="sentContent" class="border p-2 mb-2 flex-grow" placeholder="Sent content"></textarea>
+          </div>
+          <div class="flex-container mb-4">
+            <textarea id="receivedContent" class="border p-2 flex-grow" placeholder="Received content"></textarea>
+          </div>
+          <!-- Additional content for Manual tab -->
+          <div class="flex-container items-center mb-4">
+            <div class="flex-item">
+              <label class="w-24">Disconnected</label>
+              <input type="text" class="p-2 border rounded ml-2 w-16">
             </div>
+            <div class="flex-item">
+              <button class="bg-gray-300 text-black px-4 py-2 rounded ml-2">Send Line</button>
+            </div>
+            <div class="flex-item">
+              <input type="text" class="p-2 border rounded ml-2 w-16">
+            </div>
+            <div class="flex-item">
+              <button class="bg-gray-300 text-black px-4 py-2 rounded ml-2">Send Char(s)</button>
+            </div>
+          </div>
+          <div class="flex-container items-center mb-4">
+            <button class="bg-gray-300 text-black px-4 py-2 rounded mr-2">Send Memo</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded">Load Input</button>
+          </div>
+          <div class="flex-container mb-4">
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">NULL</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SOH</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">STX</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ETX</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">EOT</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ENQ</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ACK</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">BEL</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">BS</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">HT</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">LF</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">VT</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">FF</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">CR</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SO</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SI</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DLE</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DC1</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DC2</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DC3</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">DC4</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">NAK</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SYN</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ETB</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">CAN</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">EM</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">SUB</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">ESC</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">FS</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">GS</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">RS</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded m-1">US</button>
           </div>
         </div>
       </div>
@@ -289,6 +351,8 @@
       document.getElementById('connectButton').disabled = true;
       document.getElementById('disconnectButton').disabled = false;
       document.getElementById('sendButton').disabled = false;
+      document.getElementById('disconnectButton').classList.add('bg-red-500');
+      document.getElementById('disconnectButton').classList.remove('bg-gray-500');
       document.getElementById('receivedContent').value += message + '\n';
     });
 
@@ -296,6 +360,8 @@
       document.getElementById('connectButton').disabled = false;
       document.getElementById('disconnectButton').disabled = true;
       document.getElementById('sendButton').disabled = true;
+      document.getElementById('disconnectButton').classList.remove('bg-red-500');
+      document.getElementById('disconnectButton').classList.add('bg-gray-500');
       document.getElementById('receivedContent').value += message + '\n';
     });
 
@@ -309,6 +375,8 @@
 
     document.getElementById('tcpip-settings').style.display = 'block';
     document.getElementById('serial-settings').style.display = 'none';
+
+    document.getElementById('btn-lis1a').click(); // Set initial tab
   </script>
 </body>
 </html>
