@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-const WebSocket = require("ws");
 const path = require("path");
+const axios = require("axios");
+const WebSocket = require("ws");
 
 let ws;
 
@@ -20,15 +21,35 @@ function createWindow() {
 
 app.on("ready", createWindow);
 
-ipcMain.handle("connect-ws", (event, ip, port) => {
-  const wsUrl = `ws://${ip}:${port}/ws`;
+ipcMain.handle("start-server", async (event, ip, tcpPort) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/start?ip=${ip}&tcpPort=${tcpPort}`,
+      {
+        responseType: "stream",
+      }
+    );
+
+    response.data.on("data", (chunk) => {
+      const message = chunk.toString();
+      event.sender.send("server-message", message);
+    });
+  } catch (error) {
+    console.error("Error starting server:", error);
+    event.sender.send(
+      "server-message",
+      `Error starting server: ${error.message}`
+    );
+  }
+});
+
+ipcMain.handle("connect-ws", (event) => {
+  const wsUrl = `ws://localhost:6000/ws`;
   console.log("Connecting to WebSocket URL:", wsUrl);
   ws = new WebSocket(wsUrl);
 
   ws.on("open", () => {
     event.sender.send("ws-connected", "WebSocket connection established");
-    // Send the IP and Port to the WebSocket server
-    ws.send(`${ip}:${port}`);
   });
 
   ws.on("message", (data) => {

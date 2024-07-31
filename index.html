@@ -125,11 +125,15 @@
               <label class="flex-label w-1/3">Port:</label>
               <input
                 type="text"
-                id="port"
+                id="tcpPort"
                 value="8080"
                 class="p-1 border rounded flex-input"
               />
             </div>
+            <!-- <div class="flex-row w-1/3 p-2">
+              <label class="flex-label w-1/3">WebSocket Port:</label>
+              <input type="text" id="wsPort" value="8080" class="p-1 border rounded flex-input" />
+            </div> -->
             <div class="flex-checkbox">
               <input type="checkbox" class="mr-2" />
               <label>Use as Server</label>
@@ -539,8 +543,10 @@
 
       document.getElementById("connectButton").addEventListener("click", () => {
         const ip = document.getElementById("ip").value;
-        const port = document.getElementById("port").value;
-        ipcRenderer.invoke("connect-ws", ip, port);
+        const tcpPort = document.getElementById("tcpPort").value;
+        ipcRenderer.invoke("start-server", ip, tcpPort).then(() => {
+          ipcRenderer.invoke("connect-ws");
+        });
       });
 
       document.getElementById("disconnectButton").addEventListener("click", () => {
@@ -576,6 +582,10 @@
 
       ipcRenderer.on("ws-error", (event, error) => {
         document.getElementById("secondSpaceContent").value += "Error: " + error + "\n";
+      });
+
+      ipcRenderer.on("server-message", (event, message) => {
+        document.getElementById("secondSpaceContent").value += message + "\n";
       });
 
       document.getElementById("btn-lis1a").click(); // Set initial tab
