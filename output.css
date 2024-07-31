@@ -558,6 +558,10 @@ video {
   margin: 0.25rem;
 }
 
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -596,6 +600,10 @@ video {
 
 .h-\[11rem\] {
   height: 11rem;
+}
+
+.h-\[30vh\] {
+  height: 30vh;
 }
 
 .h-auto {
@@ -648,6 +656,10 @@ video {
 
 .items-center {
   align-items: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
 }
 
 .justify-center {
@@ -728,6 +740,11 @@ video {
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
 .py-2 {
