@@ -1,12 +1,11 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-const path = require("path");
 const WebSocket = require("ws");
+const path = require("path");
 
-let mainWindow;
 let ws;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -16,50 +15,36 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadFile("index.html");
+  win.loadFile("index.html");
 }
 
 app.on("ready", createWindow);
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
-
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
-
 ipcMain.handle("connect-ws", (event, ip, port) => {
-  ws = new WebSocket(`ws://${ip}:${port}/ws`);
+  const wsUrl = `ws://${ip}:${port}/ws`;
+  console.log("Connecting to WebSocket URL:", wsUrl);
+  ws = new WebSocket(wsUrl);
 
   ws.on("open", () => {
-    mainWindow.webContents.send(
-      "ws-connected",
-      "Connected to WebSocket server"
-    );
+    event.sender.send("ws-connected", "WebSocket connection established");
+    // Send the IP and Port to the WebSocket server
+    ws.send(`${ip}:${port}`);
   });
 
   ws.on("message", (data) => {
-    mainWindow.webContents.send("ws-data", data.toString());
+    event.sender.send("ws-data", data.toString());
   });
 
   ws.on("close", () => {
-    mainWindow.webContents.send(
-      "ws-disconnected",
-      "Disconnected from WebSocket server"
-    );
+    event.sender.send("ws-disconnected", "WebSocket connection closed");
   });
 
   ws.on("error", (error) => {
-    mainWindow.webContents.send("ws-error", error.message);
+    event.sender.send("ws-error", error.message);
   });
 });
 
-ipcMain.handle("disconnect-ws", () => {
+ipcMain.handle("disconnect-ws", (event) => {
   if (ws) {
     ws.close();
   }
@@ -68,7 +53,5 @@ ipcMain.handle("disconnect-ws", () => {
 ipcMain.handle("send-ws", (event, message) => {
   if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(message);
-  } else {
-    mainWindow.webContents.send("ws-error", "WebSocket is not connected");
   }
 });

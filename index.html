@@ -521,33 +521,21 @@
         document.getElementById("serial-settings").classList.add("active");
       });
 
-      document
-        .getElementById("btn-lis1a")
-        .addEventListener("click", function () {
-          document.getElementById("lis1a-content").style.display = "block";
-          document.getElementById("manual-content").style.display = "none";
-          this.classList.add("bg-blue-500", "text-white");
-          document
-            .getElementById("btn-manual")
-            .classList.remove("bg-blue-500", "text-white");
-          document
-            .getElementById("btn-manual")
-            .classList.add("bg-gray-200", "text-gray-800");
-        });
+      document.getElementById("btn-lis1a").addEventListener("click", function () {
+        document.getElementById("lis1a-content").style.display = "block";
+        document.getElementById("manual-content").style.display = "none";
+        this.classList.add("bg-blue-500", "text-white");
+        document.getElementById("btn-manual").classList.remove("bg-blue-500", "text-white");
+        document.getElementById("btn-manual").classList.add("bg-gray-200", "text-gray-800");
+      });
 
-      document
-        .getElementById("btn-manual")
-        .addEventListener("click", function () {
-          document.getElementById("lis1a-content").style.display = "none";
-          document.getElementById("manual-content").style.display = "block";
-          this.classList.add("bg-blue-500", "text-white");
-          document
-            .getElementById("btn-lis1a")
-            .classList.remove("bg-blue-500", "text-white");
-          document
-            .getElementById("btn-lis1a")
-            .classList.add("bg-gray-200", "text-gray-800");
-        });
+      document.getElementById("btn-manual").addEventListener("click", function () {
+        document.getElementById("lis1a-content").style.display = "none";
+        document.getElementById("manual-content").style.display = "block";
+        this.classList.add("bg-blue-500", "text-white");
+        document.getElementById("btn-lis1a").classList.remove("bg-blue-500", "text-white");
+        document.getElementById("btn-lis1a").classList.add("bg-gray-200", "text-gray-800");
+      });
 
       document.getElementById("connectButton").addEventListener("click", () => {
         const ip = document.getElementById("ip").value;
@@ -555,11 +543,9 @@
         ipcRenderer.invoke("connect-ws", ip, port);
       });
 
-      document
-        .getElementById("disconnectButton")
-        .addEventListener("click", () => {
-          ipcRenderer.invoke("disconnect-ws");
-        });
+      document.getElementById("disconnectButton").addEventListener("click", () => {
+        ipcRenderer.invoke("disconnect-ws");
+      });
 
       document.getElementById("sendButton").addEventListener("click", () => {
         const message = document.getElementById("firstSpaceContent").value;
@@ -571,9 +557,7 @@
         document.getElementById("disconnectButton").disabled = false;
         document.getElementById("sendButton").disabled = false;
         document.getElementById("disconnectButton").classList.add("bg-red-500");
-        document
-          .getElementById("disconnectButton")
-          .classList.remove("bg-gray-500");
+        document.getElementById("disconnectButton").classList.remove("bg-gray-500");
         document.getElementById("secondSpaceContent").value += message + "\n";
       });
 
@@ -581,12 +565,8 @@
         document.getElementById("connectButton").disabled = false;
         document.getElementById("disconnectButton").disabled = true;
         document.getElementById("sendButton").disabled = true;
-        document
-          .getElementById("disconnectButton")
-          .classList.remove("bg-red-500");
-        document
-          .getElementById("disconnectButton")
-          .classList.add("bg-gray-500");
+        document.getElementById("disconnectButton").classList.remove("bg-red-500");
+        document.getElementById("disconnectButton").classList.add("bg-gray-500");
         document.getElementById("secondSpaceContent").value += message + "\n";
       });
 
@@ -595,8 +575,7 @@
       });
 
       ipcRenderer.on("ws-error", (event, error) => {
-        document.getElementById("secondSpaceContent").value +=
-          "Error: " + error + "\n";
+        document.getElementById("secondSpaceContent").value += "Error: " + error + "\n";
       });
 
       document.getElementById("btn-lis1a").click(); // Set initial tab
