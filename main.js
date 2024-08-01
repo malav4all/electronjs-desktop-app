@@ -24,16 +24,10 @@ app.on("ready", createWindow);
 ipcMain.handle("start-server", async (event, ip, tcpPort) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/start?ip=${ip}&tcpPort=${tcpPort}`,
-      {
-        responseType: "stream",
-      }
+      `http://localhost:8080/start?ip=${ip}&tcpPort=${tcpPort}`
     );
 
-    await response.data.on("data", (chunk) => {
-      const message = chunk.toString();
-      event.sender.send("server-message", message);
-    });
+    event.sender.send("server-message", response.data);
   } catch (error) {
     console.error("Error starting server:", error);
     event.sender.send(
@@ -65,14 +59,20 @@ ipcMain.handle("connect-ws", (event) => {
   });
 });
 
-ipcMain.handle("disconnect-ws", (event) => {
+ipcMain.handle("disconnect-ws", async (event, ip, tcpPort) => {
   if (ws) {
     ws.close();
   }
-});
-
-ipcMain.handle("send-ws", (event, message) => {
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(message);
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/stop?ip=${ip}&tcpPort=${tcpPort}`
+    );
+    event.sender.send("server-message", response.data);
+  } catch (error) {
+    console.error("Error stopping server:", error);
+    event.sender.send(
+      "server-message",
+      `Error stopping server: ${error.message}`
+    );
   }
 });

@@ -514,17 +514,65 @@
 
     <script>
       const { ipcRenderer } = require("electron");
-
-      document.getElementById("tcpip").addEventListener("change", function () {
-        document.getElementById("tcpip-settings").classList.add("active");
-        document.getElementById("serial-settings").classList.remove("active");
+  
+      function appendLog(message) {
+        console.log({ message });
+        const logTextarea = document.getElementById("secondSpaceContent");
+        logTextarea.value += message + "\n";
+        logTextarea.scrollTop = logTextarea.scrollHeight;
+      }
+  
+      ipcRenderer.on("ws-connected", (event, message) => {
+        console.log("WebSocket connected:", message);
+        appendLog(message);
+        // Now start the TCP server after WebSocket connection
+        const ip = document.getElementById("ip").value;
+        const tcpPort = document.getElementById("tcpPort").value;
+        ipcRenderer.invoke("start-server", ip, tcpPort)
+        document.getElementById("connectButton").disabled = true;
+          document.getElementById("disconnectButton").disabled = false;
+          document.getElementById("disconnectButton").classList.add("bg-red-500");
+          document.getElementById("disconnectButton").classList.remove("bg-gray-500");
       });
-
-      document.getElementById("serial").addEventListener("change", function () {
-        document.getElementById("tcpip-settings").classList.remove("active");
-        document.getElementById("serial-settings").classList.add("active");
+  
+      ipcRenderer.on("ws-disconnected", (event, message) => {
+        appendLog(message);
+        document.getElementById("connectButton").disabled = false;
+        document.getElementById("disconnectButton").disabled = true;
+        document.getElementById("sendButton").disabled = true;
+        document.getElementById("disconnectButton").classList.remove("bg-red-500");
+        document.getElementById("disconnectButton").classList.add("bg-gray-500");
       });
-
+  
+      ipcRenderer.on("ws-data", (event, data) => {
+        appendLog(data);
+      });
+  
+      ipcRenderer.on("ws-error", (event, error) => {
+        appendLog("Error: " + error);
+      });
+  
+      ipcRenderer.on("server-message", (event, message) => {
+        appendLog(message);
+         
+       
+      });
+  
+      document.getElementById("connectButton").addEventListener("click", () => {
+        ipcRenderer.invoke("connect-ws"); // First connect WebSocket
+      });
+  
+      document.getElementById("disconnectButton").addEventListener("click", () => {
+      const ip = document.getElementById("ip").value;
+      const tcpPort = document.getElementById("tcpPort").value;
+      ipcRenderer.invoke("disconnect-ws", ip, tcpPort);
+    })
+  
+      document.getElementById("sendButton").addEventListener("click", () => {
+        const message = document.getElementById("firstSpaceContent").value;
+        ipcRenderer.invoke("send-ws", message);
+      });
+  
       document.getElementById("btn-lis1a").addEventListener("click", function () {
         document.getElementById("lis1a-content").style.display = "block";
         document.getElementById("manual-content").style.display = "none";
@@ -532,7 +580,7 @@
         document.getElementById("btn-manual").classList.remove("bg-blue-500", "text-white");
         document.getElementById("btn-manual").classList.add("bg-gray-200", "text-gray-800");
       });
-
+  
       document.getElementById("btn-manual").addEventListener("click", function () {
         document.getElementById("lis1a-content").style.display = "none";
         document.getElementById("manual-content").style.display = "block";
@@ -540,62 +588,17 @@
         document.getElementById("btn-lis1a").classList.remove("bg-blue-500", "text-white");
         document.getElementById("btn-lis1a").classList.add("bg-gray-200", "text-gray-800");
       });
-
-      document.getElementById("connectButton").addEventListener("click", () => {
-        const ip = document.getElementById("ip").value;
-        const tcpPort = document.getElementById("tcpPort").value;
-        document.getElementById("connectButton").disabled = true;
-        ipcRenderer.invoke("start-server", ip, tcpPort).then(() => {
-          ipcRenderer.invoke("connect-ws");
-        });
+  
+      document.getElementById("tcpip").addEventListener("change", function () {
+        document.getElementById("tcpip-settings").classList.add("active");
+        document.getElementById("serial-settings").classList.remove("active");
       });
-
-      document.getElementById("disconnectButton").addEventListener("click", () => {
-        ipcRenderer.invoke("disconnect-ws");
+  
+      document.getElementById("serial").addEventListener("change", function () {
+        document.getElementById("tcpip-settings").classList.remove("active");
+        document.getElementById("serial-settings").classList.add("active");
       });
-
-      document.getElementById("sendButton").addEventListener("click", () => {
-        const message = document.getElementById("firstSpaceContent").value;
-        ipcRenderer.invoke("send-ws", message);
-      });
-
-      ipcRenderer.on("ws-connected", (event, message) => {
-        document.getElementById("connectButton").disabled = true;
-        document.getElementById("disconnectButton").disabled = false;
-        document.getElementById("sendButton").disabled = false;
-        document.getElementById("disconnectButton").classList.add("bg-red-500");
-        document.getElementById("disconnectButton").classList.remove("bg-gray-500");
-        document.getElementById("secondSpaceContent").value += message + "\n";
-      });
-
-      ipcRenderer.on("ws-disconnected", (event, message) => {
-        document.getElementById("connectButton").disabled = false;
-        document.getElementById("disconnectButton").disabled = true;
-        document.getElementById("sendButton").disabled = true;
-        document.getElementById("disconnectButton").classList.remove("bg-red-500");
-        document.getElementById("disconnectButton").classList.add("bg-gray-500");
-        document.getElementById("secondSpaceContent").value += message + "\n";
-      });
-
-      ipcRenderer.on("ws-data", (event, data) => {
-        document.getElementById("secondSpaceContent").value += data + "\n";
-      });
-
-      ipcRenderer.on("ws-error", (event, error) => {
-        document.getElementById("secondSpaceContent").value += "Error: " + error + "\n";
-      });
-
-      // ipcRenderer.on("server-message", (event, message) => {
-      //   document.getElementById("secondSpaceContent").value += message + "\n";
-      //   if (message.includes("TCP Server listening on")) {
-      //     document.getElementById("connectButton").disabled = true;
-      //   } else if (message.includes("TCP server already running")) {
-      //     document.getElementById("connectButton").disabled = true;
-      //   } else {
-      //     document.getElementById("connectButton").disabled = false;
-      //   }
-      // });
-
+  
       document.getElementById("btn-lis1a").click(); // Set initial tab
     </script>
   </body>
