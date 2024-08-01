@@ -1,22 +1,53 @@
 {
   "name": "electron-desktop",
   "version": "1.0.0",
+  "description": "Your application description",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build:css": "npx tailwindcss build styles.css -o output.css"
+    "build:css": "npx tailwindcss build styles.css -o output.css",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac"
+  },
+  "build": {
+    "appId": "com.limsplussolution",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "preload.js",
+      "renderer.js",
+      "styles.css",
+      "output.css",
+      "package.json"
+    ],
+    "asar": false
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "axios": "^1.7.2",
-    "electron": "^31.3.0",
     "ws": "^8.18.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
+    "electron": "^31.3.0",
+    "electron-builder": "^24.13.3",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7"
   }
