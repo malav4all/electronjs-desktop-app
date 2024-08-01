@@ -30,7 +30,7 @@ ipcMain.handle("start-server", async (event, ip, tcpPort) => {
       }
     );
 
-    response.data.on("data", (chunk) => {
+    await response.data.on("data", (chunk) => {
       const message = chunk.toString();
       event.sender.send("server-message", message);
     });

@@ -544,6 +544,7 @@
       document.getElementById("connectButton").addEventListener("click", () => {
         const ip = document.getElementById("ip").value;
         const tcpPort = document.getElementById("tcpPort").value;
+        document.getElementById("connectButton").disabled = true;
         ipcRenderer.invoke("start-server", ip, tcpPort).then(() => {
           ipcRenderer.invoke("connect-ws");
         });
@@ -584,9 +585,16 @@
         document.getElementById("secondSpaceContent").value += "Error: " + error + "\n";
       });
 
-      ipcRenderer.on("server-message", (event, message) => {
-        document.getElementById("secondSpaceContent").value += message + "\n";
-      });
+      // ipcRenderer.on("server-message", (event, message) => {
+      //   document.getElementById("secondSpaceContent").value += message + "\n";
+      //   if (message.includes("TCP Server listening on")) {
+      //     document.getElementById("connectButton").disabled = true;
+      //   } else if (message.includes("TCP server already running")) {
+      //     document.getElementById("connectButton").disabled = true;
+      //   } else {
+      //     document.getElementById("connectButton").disabled = false;
+      //   }
+      // });
 
       document.getElementById("btn-lis1a").click(); // Set initial tab
     </script>
